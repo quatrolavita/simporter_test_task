@@ -8,6 +8,9 @@ if os.environ.get('FLASK_COVERAGE'):
 from app import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from app.models import TimeLine
+from populate_db import populate_db_csv
+from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -15,7 +18,7 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
-    return dict(app=app, db=db)
+    return dict(app=app, db=db, TimeLine=TimeLine)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -42,6 +45,13 @@ def test(coverage=False):
         COV.html_report(directory=covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
+
+
+@manager.command
+@manager.option(help='Path to csv file')
+def populate(file_path):
+    populate_db_csv(file_path, Config.SQLALCHEMY_DATABASE_URI)
+    print('Database is populated!')
 
 
 if __name__ == '__main__':

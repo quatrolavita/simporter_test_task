@@ -1,0 +1,60 @@
+import os
+import unittest
+import csv
+from app import create_app, db
+from populate_db import populate_db_csv
+from config import TestConfig
+from sqlalchemy.exc import OperationalError
+from pandas.errors import ParserError
+
+class PopulationDBTests(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app('testing')
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        self.client = self.app.test_client(use_cookies=True)
+        self.db_url = TestConfig.SQLALCHEMY_DATABASE_URI
+
+        fieldnames = ['asin', 'brand', 'id', 'source', 'stars', 'timestamp']
+
+        with open('test.csv', 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow({'asin': 'B0014D3N0Q', 'brand': 'Downy',
+                             'id': 'R11QPQWAH45REP', 'source': 'amazon',
+                             'stars': '5', 'timestamp': '1548799200'})
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+        os.remove('test.csv')
+        os.remove('app/test.sqlite')
+
+    def test_populate_with_valid_file_name(self):
+
+        self.assertIsNone(populate_db_csv('test.csv', self.db_url))
+
+    def test_populate_with_invalid_file_name(self):
+
+        with self.assertRaises(FileNotFoundError):
+            populate_db_csv('invalid_file.csv', self.db_url)
+
+    def test_populate_with_invalid_csv_file(self):
+
+        fieldnames = ['invalid', 'brand', 'id', 'source', 'stars', 'timestamp']
+        with open('invalid.csv', 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow({'invalid': 'B0014D3N0Q', 'brand': 'Downy',
+                             'id': 'R11QPQWAH45REP', 'source': 'amazon',
+                             'stars': '5', 'timestamp': '1548799200'})
+        with self.assertRaises(OperationalError):
+            populate_db_csv('invalid.csv', self.db_url)
+        os.remove('invalid.csv')
+
+    def test_populate_with_no_csv_file(self):
+        with self.assertRaises(ParserError):
+            populate_db_csv('manage.py', self.db_url)
