@@ -1,4 +1,4 @@
-##Simporter Test Task 
+# Simporter Test Task 
 
 This application requires two API methods `/api/info` and `/api/timeline`
 
@@ -46,7 +46,7 @@ sudo docker-compose down
 sudo docker-compose up
 ```
 
-#HOW TO TEST?
+# HOW TO TEST?
 
 1. Clone git repo 
 
