@@ -39,15 +39,17 @@ class PopulationDBTests(unittest.TestCase):
         os.remove('test.sqlite')
 
     def test_populate_with_valid_file_name(self):
-
+        """Check valid population db"""
         self.assertIsNone(populate_db_csv('test.csv', self.db_url))
 
     def test_populate_with_invalid_file_name(self):
+        """Check population db with invalid csv file name"""
 
         with self.assertRaises(FileNotFoundError):
             populate_db_csv('invalid_file.csv', self.db_url)
 
     def test_populate_with_invalid_csv_file(self):
+        """Check population db with invalid csv file """
 
         fieldnames = ['invalid', 'brand', 'id', 'source', 'stars', 'timestamp']
         with open('invalid.csv', 'w', newline='') as file:
@@ -61,5 +63,7 @@ class PopulationDBTests(unittest.TestCase):
         os.remove('invalid.csv')
 
     def test_populate_with_no_csv_file(self):
+        """Check population db without csv file """
+
         with self.assertRaises(ParserError):
             populate_db_csv('manage.py', self.db_url)

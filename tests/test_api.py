@@ -1,4 +1,3 @@
-import os
 import unittest
 import json
 from app import create_app, db
@@ -28,10 +27,14 @@ class ApiTest(unittest.TestCase):
         self.app_context.pop()
 
     def test_404(self):
+        """This test checks the behavior for invalid url"""
+
         res = self.client.get('invalid/url', headers=self.api_headers)
         self.assertTrue(res.status_code == 404)
 
     def test_info(self):
+        """This test checks the behavior for api/info method"""
+
         res = self.client.get('api/info', headers=self.api_headers)
         self.assertTrue(res.status_code == 200)
         json_res = json.loads(res.data)
@@ -46,6 +49,7 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(type(json_res['brand']), type([]))
 
     def test_timeline(self):
+        """This test checks the behavior for api/timeline method"""
 
         res = self.client.get('api/timeline', headers=self.api_headers)
         json_res = json.loads(res.data)

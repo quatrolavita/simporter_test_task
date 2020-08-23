@@ -6,6 +6,8 @@ from ..models import TimeLine
 
 
 def get_attribute_values(attribute):
+    """Returns: Information about possible filtering
+    (list of attributes and list of values for each attribute)"""
 
     result_list = []
 
@@ -16,6 +18,7 @@ def get_attribute_values(attribute):
 
 
 def get_timeline_data(params):
+    """Returns: JSON with timeline information according to input parameters"""
 
     start_date = _convert_date_to_timestamp(params.get('startDate'))
     end_date = _convert_date_to_timestamp(params.get('endDate'))
