@@ -1,11 +1,11 @@
-###### Simporter Test Task 
+##Simporter Test Task 
 
 This application requires two API methods `/api/info` and `/api/timeline`
 
 `/api/info` 
 This API method returns JSON with possible filtering (list of attributes and list of values for each attribute)
 Like this:
-``` json
+``` 
 {
   "asin": [<list of values>], 
   "brand": [<list of values>], 
@@ -30,7 +30,7 @@ Like this:
 
 ```
 
-###### HOW TO START?
+# HOW TO START?
 
 1. Clone git repo 
 
@@ -46,7 +46,7 @@ sudo docker-compose down
 sudo docker-compose up
 ```
 
-###### HOW TO TEST?
+#HOW TO TEST?
 
 1. Clone git repo 
 
