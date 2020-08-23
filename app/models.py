@@ -9,8 +9,8 @@ class TimeLine(db.Model):
     asin = db.Column(db.String(64))
     brand = db.Column(db.String(64))
     source = db.Column(db.String(64))
-    stars = db.Column(db.String(64))
-    timestamp = db.Column(db.String(64))
+    stars = db.Column(db.Integer)
+    timestamp = db.Column(db.Integer)
 
     def __init__(self, id, asin, brand, source, stars, timestamp):
         self.id = id
@@ -19,3 +19,6 @@ class TimeLine(db.Model):
         self.source = source
         self.stars = stars
         self.timestamp = timestamp
+
+    def __repr__(self):
+        return f'{self.asin} {self.brand} {self.source}  {self.stars}'

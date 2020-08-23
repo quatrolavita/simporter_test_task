@@ -1,5 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.types import Integer, String
 
 
 def populate_db_csv(file_name, db_url):
@@ -10,7 +11,10 @@ def populate_db_csv(file_name, db_url):
 
     engine = create_engine(db_url)
 
-    df.to_sql("timeline", engine, if_exists="append", index=False)
+    df.to_sql("timeline", engine, if_exists="append",
+              index=False, dtype={'asin': String, 'brand': String,
+                                  'id': String, 'source': String,
+                                  'stars': Integer, 'timestamp': Integer})
 
 
 

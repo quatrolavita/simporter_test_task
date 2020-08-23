@@ -7,6 +7,19 @@ from config import TestConfig
 from sqlalchemy.exc import OperationalError
 from pandas.errors import ParserError
 
+
+def create_test_csv():
+
+    fieldnames = ['asin', 'brand', 'id', 'source', 'stars', 'timestamp']
+
+    with open('test.csv', 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerow({'asin': 'B0014D3N0Q', 'brand': 'Downy',
+                         'id': 'R11QPQWAH45REP', 'source': 'amazon',
+                         'stars': 5, 'timestamp': 1548799200})
+
+
 class PopulationDBTests(unittest.TestCase):
 
     def setUp(self):
@@ -16,22 +29,14 @@ class PopulationDBTests(unittest.TestCase):
         db.create_all()
         self.client = self.app.test_client(use_cookies=True)
         self.db_url = TestConfig.SQLALCHEMY_DATABASE_URI
-
-        fieldnames = ['asin', 'brand', 'id', 'source', 'stars', 'timestamp']
-
-        with open('test.csv', 'w', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerow({'asin': 'B0014D3N0Q', 'brand': 'Downy',
-                             'id': 'R11QPQWAH45REP', 'source': 'amazon',
-                             'stars': '5', 'timestamp': '1548799200'})
+        create_test_csv()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
         os.remove('test.csv')
-        os.remove('app/test.sqlite')
+        os.remove('test.sqlite')
 
     def test_populate_with_valid_file_name(self):
 
